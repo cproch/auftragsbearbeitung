@@ -16,6 +16,31 @@ public class main {
         //       ShowAllAuftraege();
     }
 
+
+
+    /*Menüs:
+    *
+    *
+    * Main:
+    *   - Aufträge
+    *       - Produkt hinzufügen
+    *           - Prüfen, ob Produkt bereits vorhanden, wenn ja hinweis ( menge erhöhen, abbrechen )
+    *             wenn nein, eingabe zulassen
+    *       - Bearbeiten
+    *           - Sachbearbeiter Name Ändern
+    *       - Übersicht aller Aufträge ( eines speziellen Sachbearbeiters ? )
+    *         angezeigt werden soll:
+    *                               - Pro Posten: Produktname, Anzahl und Gesamtpreis des Posten
+    *       - Gesamtpreis des Auftrages anzeigen lassen
+    *   - Produkte
+    *       - Einzelpreis ändern
+    *
+    *  ------ Nacheinander sollen mehrere Aufträge eingegeben werden können
+    *
+    * */
+
+
+
     private static void switchMenuesToSow() {
 
         switch (menueToShow) {
