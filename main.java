@@ -1,19 +1,21 @@
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
+
+import static java.lang.Integer.parseInt;
 
 public class main {
     private static List<auftrag> auftragsListe = new ArrayList<auftrag>();
+    private static List<produkt> produktListe = new ArrayList<produkt>();
     private static boolean runProgramm = true;
-    private static Integer menueToShow=0;
+    private static final Scanner userInput = new Scanner(System.in);
 
     public static void main(String[] args) {
-
+        SetSeedData();
         while (runProgramm) {
-            switchMenuesToSow();
+            showMainMenue();
         }
-
-//        SetSeedData();
-        //       ShowAllAuftraege();
+        showQuitMenue();
     }
 
 
@@ -34,46 +36,116 @@ public class main {
     *       - Gesamtpreis des Auftrages anzeigen lassen
     *   - Produkte
     *       - Einzelpreis ändern
+    *       - Eingabe von Produkten
     *
     *  ------ Nacheinander sollen mehrere Aufträge eingegeben werden können
     *
     * */
 
 
+    private static void showMainMenue() {
+        int[] menueNumberRange = {0, 1, 2};
+        Integer intMenueChoice = 0;
 
-    private static void switchMenuesToSow() {
+        System.out.println("Was möchten sie als nächstes tun?");
+        System.out.println("(1) Auftragsmenü");
+        System.out.println("(2) Produktmenü");
+        System.out.println("(0) Beenden");
+        intMenueChoice = userInputIsInteger();
 
-        switch (menueToShow) {
-            case 0:
-                showMainMenue();
-                break;
-            case 1:
+        if (userInputIsValidMenueNumber(menueNumberRange, intMenueChoice)) {
+
+            if (intMenueChoice == 0) {
+                runProgramm = false;
+            }
+
+            if (intMenueChoice == 1) {
                 showContractMenue();
-                break;
-            default:
-                break;
+            }
+
+            if (intMenueChoice == 2) {
+                showProductMenue();
+            }
+
+        } else {
+            System.out.println("Dieser Menüpunkt existiert nicht");
+            showMainMenue();
         }
 
-
-        showQuitMenue();
-        System.exit(0);
-
-    }
-
-
-    private static void showMainMenue() {
-        System.out.println("test");
-        menueToShow = 1;
 
     }
 
     public static void showContractMenue() {
+        System.out.println("Vertrags Menü");
+
+    }
+
+    public static void showProductMenue() {
+        int[] menueNumberRange = {0, 1, 2};
+        int intMenueChoice;
+        boolean inMenue = true;
+
+        while (inMenue) {
+            System.out.println("Produkt Menü");
+            System.out.println("(0) zum Hauptmenü");
+            System.out.println("(1) Produkt eingeben");
+            System.out.println("(2) Preis ändern");
+            intMenueChoice = userInputIsInteger();
+
+            if (userInputIsValidMenueNumber(menueNumberRange, intMenueChoice)) {
+
+
+                if (intMenueChoice == 0) {
+                    inMenue = false;
+                }
+
+                if (intMenueChoice == 1) {
+                    System.out.println("Produkt eingeben");
+                    //produktListe
+                }
+
+                if (intMenueChoice == 2) {
+                    System.out.println("Preis ändern");
+                    //produktListe
+                }
+
+
+            } else {
+                System.out.println("Dieser Menüpunkt existiert nicht");
+            }
+
+        }
 
     }
 
 
     public static void showQuitMenue() {
+        System.out.println("Alle Aufträge:");
+        ShowAllAuftraege();
+        System.out.println("Auf wiedersehen");
+    }
 
+
+    private static boolean userInputIsValidMenueNumber(int[] menueArray, int userInput) {
+        for (int intNum : menueArray) {
+            if (userInput == intNum)
+                return true;
+        }
+        return false;
+    }
+
+    private static int userInputIsInteger() {
+        int n1 = 0;
+        boolean bError = true;
+        while (bError) {
+            try {
+                n1 = parseInt(userInput.nextLine());
+                bError = false;
+            } catch (NumberFormatException e) {
+                System.out.println("Bitte nur Zahlen eingeben");
+            }
+        }
+        return n1;
     }
 
 
@@ -105,8 +177,14 @@ public class main {
         produkt Prod3 = new produkt(2.99, "Radiergummi");
         produkt Prod4 = new produkt(3.99, "Geodreieck");
 
+        produktListe.add(Prod1);
+        produktListe.add(Prod2);
+        produktListe.add(Prod3);
+        produktListe.add(Prod4);
+
         posten Posten1 = new posten();
         Posten1.addProdukt(Prod1, 1);
+
         posten Posten2 = new posten();
         Posten2.addProdukt(Prod2, 2);
 
@@ -118,6 +196,7 @@ public class main {
 
         auftrag Auftrag1 = new auftrag(Kunde1, Sachbearbeiter1);
         auftrag Auftrag2 = new auftrag(Kunde2, Sachbearbeiter2);
+
         Auftrag1.addPosten(Posten1);
         Auftrag1.addPosten(Posten2);
         Auftrag2.addPosten(Posten3);
