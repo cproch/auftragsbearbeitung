@@ -181,21 +181,43 @@ public class main {
                     chosenProduct = userInputIsInteger();
                 }
 
+                boolean schonda = false;
 
-                //TODO: Hinweis, wenn das Produkt bereits als Posten vorhanden ist - dann evtl. die Anzahl korrigieren ?
+                for (posten post : neuerAuftrag.getListPosten()) {
+                    for (produkt prod : post.getListPosten()) {
+
+                        if (prod.getName().equals(produktListe.get(chosenProduct - 1).getName())) {
+                            System.out.println("Produkt schon im Auftrag.");
+                            schonda = true;
+                        }
+
+                    }
+
+                    if (schonda) {
+                        System.out.println("Bisherigen Menge: " + post.getMenge());
+                        System.out.println("Neue Menge: ");
+                        post.setMenge(userInputIsInteger());
+                    }
+
+                }
 
 
+                if (!schonda) {
+                    System.out.println("Anzahl von " + produktListe.get(chosenProduct - 1).getName() + ", die als Posten aufgenommen werden sollen: ");
+                    amountProduct = userInputIsInteger();
 
-                System.out.println("Anzahl von " + produktListe.get(chosenProduct - 1).getName() + ", die als Posten aufgenommen werden sollen: ");
-                amountProduct = userInputIsInteger();
-                posten newPosten = new posten();
-                newPosten.addProdukt(produktListe.get(chosenProduct - 1), amountProduct);
 
-                neuerAuftrag.addPosten(newPosten);
-                auftragsListe.add(neuerAuftrag);
+                    posten newPosten = new posten();
+
+
+                    newPosten.addProdukt(produktListe.get(chosenProduct - 1), amountProduct);
+
+                    neuerAuftrag.addPosten(newPosten);
+                    auftragsListe.add(neuerAuftrag);
+                }
 
                 System.out.println("Details zum bisherigen Auftrag: ");
-                System.out.println("Kunde: "+auftragsListe.get(auftragsListe.size() - 1).getKundenName()+", Sachbearbeiter: "+auftragsListe.get(auftragsListe.size() - 1).getSachbearbeiterName());
+                System.out.println("Kunde: " + auftragsListe.get(auftragsListe.size() - 1).getKundenName() + ", Sachbearbeiter: " + auftragsListe.get(auftragsListe.size() - 1).getSachbearbeiterName());
                 auftragsListe.get(auftragsListe.size() - 1).showDetails();
 
                 System.out.println("Ein weiteres Produkt hinzufügen? (Y/N) ");
