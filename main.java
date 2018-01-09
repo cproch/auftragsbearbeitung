@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Scanner;
 
@@ -100,13 +101,11 @@ public class main {
                 }
 
                 if (intMenueChoice == 1) {
-                    System.out.println("Produkt eingeben");
-                    //produktListe
+                    enterNewProduct();
                 }
 
                 if (intMenueChoice == 2) {
-                    System.out.println("Preis ändern");
-                    //produktListe
+                    changeProductPrice();
                 }
 
 
@@ -119,6 +118,80 @@ public class main {
     }
 
 
+    public static void changeProductPrice() {
+        String stringProduktListe = "";
+        int counter = 0;
+        boolean inputError = true;
+        int[] menueNumberRange = new int[produktListe.size()];
+        int intProductChoice;
+        double newProductPrice;
+
+        System.out.println("Folgende Produkte sind verfügbar:");
+
+        for (produkt p : produktListe) {
+            menueNumberRange[counter] = counter + 1;
+            counter++;
+            stringProduktListe += "(" + counter + ")" + p.getName() + ",";
+        }
+
+
+        while (inputError) {
+            System.out.println(stringProduktListe);
+            System.out.println("Bitte die Produktnummer eingeben:");
+            intProductChoice = userInputIsInteger();
+            if (userInputIsValidMenueNumber(menueNumberRange, intProductChoice)) {
+                System.out.println("Alter Preis für " + produktListe.get(intProductChoice - 1).getName() + " ist: " + produktListe.get(intProductChoice - 1).getPreis());
+                System.out.println("Neuer Preis soll sein: ");
+                newProductPrice = userInputIsDouble();
+                produktListe.get(intProductChoice - 1).setPreis(newProductPrice);
+                System.out.println("Neuer Preis für " + produktListe.get(intProductChoice - 1).getName() + " ist: " + produktListe.get(intProductChoice - 1).getPreis());
+                inputError = false;
+            }
+        }
+
+        clearSanner();
+
+    }
+
+    public static void enterNewProduct() {
+        boolean inputNotAccepted = true;
+        String productName = "";
+        double productPrice = 0.00;
+        produkt newProduct = new produkt(0, "");
+
+        while (inputNotAccepted) {
+            boolean isNewProduct = true;
+            System.out.println("Namen des Produktes eingeben: ");
+            productName = userInputisString();
+
+            while (isNewProduct) {
+                if (productNotInProductList(productName)) {
+                    newProduct.setName(productName);
+                    System.out.println("Preis des Produktes eingeben: ");
+                    productPrice = userInputIsDouble();
+                    newProduct.setPreis(productPrice);
+                    produktListe.add(newProduct);
+                    isNewProduct = false;
+
+                } else {
+                    System.out.println("Dieses Produkt existiet bereits - bitte andernen Namen verwenden");
+                    System.out.println("Namen des Produktes eingeben: ");
+                    productName = userInputisString();
+                    isNewProduct = true;
+                }
+
+            }
+            inputNotAccepted = false;
+        }
+        clearSanner();
+    }
+
+
+    public static void clearSanner() {
+        String clearScanner = userInput.nextLine();
+
+    }
+
     public static void showQuitMenue() {
         System.out.println("Alle Aufträge:");
         ShowAllAuftraege();
@@ -126,12 +199,36 @@ public class main {
     }
 
 
+    private static boolean productNotInProductList(String prodName) {
+        for (produkt prod : produktListe) {
+            if (prod.getName().equals(prodName)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
     private static boolean userInputIsValidMenueNumber(int[] menueArray, int userInput) {
         for (int intNum : menueArray) {
             if (userInput == intNum)
                 return true;
         }
         return false;
+    }
+
+
+    private static String userInputisString() {
+        String s1 = "";
+        boolean bError = true;
+        while (bError) {
+            try {
+                s1 = userInput.nextLine();
+                bError = false;
+            } catch (NumberFormatException e) {
+                System.out.println("Bitte nur Text eingeben");
+            }
+        }
+        return s1;
     }
 
     private static int userInputIsInteger() {
@@ -143,6 +240,22 @@ public class main {
                 bError = false;
             } catch (NumberFormatException e) {
                 System.out.println("Bitte nur Zahlen eingeben");
+            }
+        }
+        return n1;
+    }
+
+    private static double userInputIsDouble() {
+        double n1 = 0;
+        boolean bError = true;
+        while (bError) {
+            try {
+                n1 = userInput.nextDouble();
+                bError = false;
+            } catch (NumberFormatException e) {
+                System.out.println("Bitte einen Preis eingeben ( 12.34 )");
+            } catch (InputMismatchException i) {
+                System.out.println("Falsches Eingabeformat ( 12.34 )");
             }
         }
         return n1;
