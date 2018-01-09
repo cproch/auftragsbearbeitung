@@ -35,9 +35,7 @@ public class main {
     *         angezeigt werden soll:
     *                               - Pro Posten: Produktname, Anzahl und Gesamtpreis des Posten
     *       - Gesamtpreis des Auftrages anzeigen lassen
-    *   - Produkte
-    *       - Einzelpreis ändern
-    *       - Eingabe von Produkten
+    *
     *
     *  ------ Nacheinander sollen mehrere Aufträge eingegeben werden können
     *
@@ -77,8 +75,37 @@ public class main {
     }
 
     public static void showContractMenue() {
-        System.out.println("Vertrags Menü");
+        int[] menueNumberRange = {0, 1, 2};
+        int intMenueChoice;
+        boolean inMenue = true;
 
+        while (inMenue) {
+            System.out.println("Produkt Menü");
+            System.out.println("(0) zum Hauptmenü");
+            System.out.println("(1) Vertrag eingeben");
+            System.out.println("(2) Alle Verträge anzeigen");
+            intMenueChoice = userInputIsInteger();
+
+            if (userInputIsValidMenueNumber(menueNumberRange, intMenueChoice)) {
+
+                if (intMenueChoice == 0) {
+                    inMenue = false;
+                }
+
+                if (intMenueChoice == 1) {
+                    enterNewContract();
+                }
+
+                if (intMenueChoice == 2) {
+                    ShowAllAuftraege();
+                }
+
+
+            } else {
+                System.out.println("Dieser Menüpunkt existiert nicht");
+            }
+
+        }
     }
 
     public static void showProductMenue() {
@@ -117,6 +144,97 @@ public class main {
 
     }
 
+
+    public static void enterNewContract() {
+        boolean inputNotAccepted = true;
+        String nameContractAssignee, nameCustomer, addmoreProducts;
+        int counter = 0;
+        int chosenProduct = 0;
+        int[] productRange = new int[produktListe.size()];
+        int amountProduct;
+        boolean addMoreProductsToContract = true;
+        boolean yesOrNoNotEntered = true;
+
+        while (inputNotAccepted) {
+            System.out.println("Name des Sachbearbeiters: ");
+            nameContractAssignee = userInputisString();
+            System.out.println("Name des Kunden: ");
+            nameCustomer = userInputisString();
+            auftrag neuerAuftrag = new auftrag(nameCustomer, nameContractAssignee);
+
+            while (addMoreProductsToContract) {
+                counter = 0;
+
+
+                System.out.println("Produkt auswahl: ");
+
+                for (produkt p : produktListe) {
+                    productRange[counter] = counter + 1;
+                    counter++;
+                    System.out.println("(" + counter + ") " + produktListe.get(counter - 1).getName());
+                }
+
+                chosenProduct = userInputIsInteger();
+
+                while (!userInputIsValidMenueNumber(productRange, chosenProduct)) {
+                    System.out.println("Falsche Produktnummer - bitte erneut eingeben:");
+                    chosenProduct = userInputIsInteger();
+                }
+
+
+                //TODO: Hinweis, wenn das Produkt bereits als Posten vorhanden ist - dann evtl. die Anzahl korrigieren ?
+
+
+
+                System.out.println("Anzahl von " + produktListe.get(chosenProduct - 1).getName() + ", die als Posten aufgenommen werden sollen: ");
+                amountProduct = userInputIsInteger();
+                posten newPosten = new posten();
+                newPosten.addProdukt(produktListe.get(chosenProduct - 1), amountProduct);
+
+                neuerAuftrag.addPosten(newPosten);
+                auftragsListe.add(neuerAuftrag);
+
+                System.out.println("Details zum bisherigen Auftrag: ");
+                System.out.println("Kunde: "+auftragsListe.get(auftragsListe.size() - 1).getKundenName()+", Sachbearbeiter: "+auftragsListe.get(auftragsListe.size() - 1).getSachbearbeiterName());
+                auftragsListe.get(auftragsListe.size() - 1).showDetails();
+
+                System.out.println("Ein weiteres Produkt hinzufügen? (Y/N) ");
+
+                addmoreProducts = userInputisString();
+
+                if ((!addmoreProducts.equals("Y")) || (!addmoreProducts.equals("N"))) {
+                    yesOrNoNotEntered = false;
+                } else {
+                    yesOrNoNotEntered = true;
+                }
+
+
+                while (yesOrNoNotEntered) {
+                    if ((!addmoreProducts.equals("Y")) || (!addmoreProducts.equals("N"))) {
+                        System.out.println("Bitte nur N oder Y eingeben");
+                        System.out.println("Ein weiteres Produkt hinzufügen? (Y/N) ");
+                        addmoreProducts = userInputisString();
+                        System.out.println(addmoreProducts);
+                    } else {
+                        yesOrNoNotEntered = false;
+                    }
+                }
+
+
+                if (addmoreProducts.equals("Y")) {
+                    addMoreProductsToContract = true;
+
+                } else {
+
+                    addMoreProductsToContract = false;
+                }
+
+
+            }
+            inputNotAccepted = false;
+        }
+
+    }
 
     public static void changeProductPrice() {
         String stringProduktListe = "";
@@ -252,9 +370,7 @@ public class main {
             try {
                 n1 = userInput.nextDouble();
                 bError = false;
-            } catch (NumberFormatException e) {
-                System.out.println("Bitte einen Preis eingeben ( 12.34 )");
-            } catch (InputMismatchException i) {
+            } catch (InputMismatchException e) {
                 System.out.println("Falsches Eingabeformat ( 12.34 )");
             }
         }
