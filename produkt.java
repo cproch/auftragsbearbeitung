@@ -8,7 +8,7 @@ public class produkt {
     }
 
     public String getName() {
-        return name;
+        return this.name;
     }
 
     public void setName(String name) {
@@ -16,7 +16,7 @@ public class produkt {
     }
 
     public double getPreis() {
-        return preis;
+        return this.preis;
     }
 
     public void setPreis(double preis) {
